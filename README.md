@@ -6,6 +6,8 @@ You can see the [full documentation at godoc.org](https://godoc.org/github.com/d
 Example usage:
 
 ```
+package main
+
 import "github.com/defcube/chrono"
 
 func main() {
