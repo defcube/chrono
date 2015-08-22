@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-type WaitForSettings struct {
+// WaitForSettings gives low-level control.
+type waitForSettings struct {
 
 	// Wait until this returns true, or MaxWaitTime expires
 	Test func() bool
@@ -17,8 +18,8 @@ type WaitForSettings struct {
 }
 
 // A constructor for `WaitForSettings`
-func MakeWaitForSettings(t func() bool) *WaitForSettings {
-	return &WaitForSettings{
+func MakeWaitForSettings(t func() bool) *waitForSettings {
+	return &waitForSettings{
 		Test:           t,
 		SleepTime:   30 * time.Millisecond,
 		MaxWaitTime: 10 * time.Second,
@@ -38,7 +39,7 @@ func MustWaitFor(w func() bool) {
 	}
 }
 
-func (w *WaitForSettings) Wait() error {
+func (w *waitForSettings) Wait() error {
 	startTime := time.Now()
 	for {
 		time.Sleep(w.SleepTime)
