@@ -5,8 +5,9 @@ import (
 	"time"
 )
 
-// WaitForSettings gives low-level control.
-type waitForSettings struct {
+// WaitForSettings gives low-level control. Generally, one would call
+// `MakeWaitForSettings` to initialize this to default settings
+type WaitForSettings struct {
 
 	// Wait until this returns true, or MaxWaitTime expires
 	Test func() bool
@@ -17,21 +18,22 @@ type waitForSettings struct {
 
 }
 
-// A constructor for `WaitForSettings`
-func MakeWaitForSettings(t func() bool) *waitForSettings {
-	return &waitForSettings{
+// MakeWaitForSettings returns a `WaitForSettings` struct with fields
+// initialized to defaults
+func MakeWaitForSettings(t func() bool) *WaitForSettings {
+	return &WaitForSettings{
 		Test:           t,
 		SleepTime:   30 * time.Millisecond,
 		MaxWaitTime: 10 * time.Second,
 	}
 }
 
-// Convenience function that waits for the default settings
+// WaitFor blocks until the condition returns True
 func WaitFor(w func() bool) error {
 	return MakeWaitForSettings(w).Wait()
 }
 
-// A wrapper for WaitFor that panics upon error
+// MustWaitFor is a wrapper for WaitFor that panics upon error
 func MustWaitFor(w func() bool) {
 	err := WaitFor(w)
 	if err != nil {
@@ -39,7 +41,8 @@ func MustWaitFor(w func() bool) {
 	}
 }
 
-func (w *waitForSettings) Wait() error {
+// Wait blocks until the condition returns True
+func (w *WaitForSettings) Wait() error {
 	startTime := time.Now()
 	for {
 		time.Sleep(w.SleepTime)
