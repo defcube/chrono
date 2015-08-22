@@ -30,6 +30,7 @@ func WaitFor(w func() bool) error {
 	return MakeWaitForSettings(w).Wait()
 }
 
+// A wrapper for WaitFor that panics upon error
 func MustWaitFor(w func() bool) {
 	err := WaitFor(w)
 	if err != nil {
